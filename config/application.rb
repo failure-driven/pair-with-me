@@ -33,5 +33,12 @@ module PairWithMe
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Use raw SQL over rails based schema.rb
+    config.active_record.schema_format = :sql
+
+    config.generators do |generator|
+      generator.orm :active_record, primary_key_type: :uuid
+    end
   end
 end
