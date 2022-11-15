@@ -53,6 +53,18 @@ gem "bootsnap", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
+gem "devise", "~> 4.8"
+
+group :test do
+  gem "capybara", "~> 3.38"
+  gem "capybara-inline-screenshot", "~> 2.2"
+  gem "rspec-example_steps", "~> 3.1"
+  gem "rspec-rails", "~> 6.0"
+  gem "selenium-webdriver", "~> 4.6"
+  gem "site_prism", "~> 3.7"
+  gem "webdrivers", "~> 5.2"
+end
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[mri mingw x64_mingw]
@@ -75,10 +87,3 @@ group :development do
   # gem "spring"
 end
 
-gem "capybara", "~> 3.38"
-gem "capybara-inline-screenshot", "~> 2.2"
-gem "rspec-example_steps", "~> 3.1"
-gem "rspec-rails", "~> 6.0"
-gem "selenium-webdriver", "~> 4.6"
-gem "site_prism", "~> 3.7"
-gem "webdrivers", "~> 5.2"
