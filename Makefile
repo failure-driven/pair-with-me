@@ -23,8 +23,12 @@ rubocop-fix:
 rubocop:
 	bundle exec rubocop
 
+.PHONY: rspec
+rspec:
+	bundle exec rspec
+
 .PHONY: build
-build: rubocop
+build: rubocop rspec
 
 .PHONY: pg-init
 pg-init:
@@ -53,6 +57,7 @@ usage:
 	@echo
 	@echo "${YELLOW}make rubocop${NC}      rubocop"
 	@echo "${YELLOW}make rubocop-fix${NC}  rubocop fix"
+	@echo "${YELLOW}make rspec${NC}        run rspec tests"
 	@echo "${YELLOW}make pg-init${NC}      one off initialize db in tmp/postgres port 5442"
 	@echo "${YELLOW}make pg-start${NC}     start the db on port 5442"
 	@echo "${YELLOW}make pg-stop${NC}      stop the db on port 5442"

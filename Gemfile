@@ -74,3 +74,11 @@ group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
 end
+
+gem "capybara", "~> 3.38"
+gem "capybara-inline-screenshot", "~> 2.2"
+gem "rspec-example_steps", "~> 3.1"
+gem "rspec-rails", "~> 6.0"
+gem "selenium-webdriver", "~> 4.6"
+gem "site_prism", "~> 3.7"
+gem "webdrivers", "~> 5.2"
