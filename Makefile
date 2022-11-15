@@ -30,6 +30,13 @@ rspec:
 .PHONY: build
 build: rubocop rspec
 
+.PHONY: deploy
+deploy:
+	RAILS_MASTER_KEY=`cat config/master.key` \
+		HEROKU_APP_NAME=pairwithme \
+		HEROKU_DOMAIN=pair-with.me \
+		bin/makefile/heroku-create
+
 .PHONY: pg-init
 pg-init:
 	PGPORT=5442 asdf exec initdb tmp/postgres -E utf8 || echo "postgres already initialised"
@@ -61,4 +68,8 @@ usage:
 	@echo "${YELLOW}make pg-init${NC}      one off initialize db in tmp/postgres port 5442"
 	@echo "${YELLOW}make pg-start${NC}     start the db on port 5442"
 	@echo "${YELLOW}make pg-stop${NC}      stop the db on port 5442"
+	@echo
+	@echo "Deployment"
+	@echo
+	@echo "${YELLOW}make deploy${NC}       deploy to heroku"
 	@echo
