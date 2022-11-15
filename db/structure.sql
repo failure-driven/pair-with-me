@@ -69,7 +69,11 @@ CREATE TABLE public.users (
     confirmation_sent_at timestamp(6) without time zone,
     unconfirmed_email character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    name character varying NOT NULL,
+    username character varying NOT NULL,
+    provider character varying,
+    uid character varying
 );
 
 
@@ -126,6 +130,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20221114000000'),
-('20221115101439');
+('20221115101439'),
+('20221115200514');
 
 
