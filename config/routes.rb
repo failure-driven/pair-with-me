@@ -7,6 +7,14 @@ Rails.application.routes.draw do
   # a test only route used by spec/features/it_works_spec.rb
   get "test_root", to: "rails/welcome#index", as: "test_root_rails"
 
+  authenticated :user do
+    resources :profile, only: [:index, :show]
+    get "/:id", to: "profile#show", as: :show_profile
+    get "/", to: redirect("/profile")
+  end
+
+  get "/:id", to: "profile#show", as: :show_public_profile
+
   # Defines the root path route ("/")
   root to: "home#index"
 end

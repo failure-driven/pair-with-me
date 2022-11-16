@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class App < SitePrism::Page
-  # set_url Rails.application.routes.url_helpers.root_path
-  set_url "/users/sign_up" # TODO: replace with registration path helper
+  set_url Rails.application.routes.url_helpers.new_user_registration_path
 
   element :submit, :css, "input[type=submit]"
 

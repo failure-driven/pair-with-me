@@ -45,7 +45,31 @@ feature "User signup", :js do
       end
 
       Then "her profile is shown" do
-        expect(page.find("[data-testid=notice]")).to have_content "Successfully authenticated from Github account."
+        Profile.new.when_loaded do |page|
+          expect(page.profile_name).to have_content "selena"
+          @profile_url = page.current_path
+        end
+      end
+
+      When "she signs out" do
+        Profile.new.when_loaded do |page|
+          page.sign_out.click
+        end
+      end
+
+      Then "she is on the landing page" do
+        expect(page).to have_current_path "/"
+      end
+
+      When "she visits her public profile page" do
+        visit @profile_url
+      end
+
+      Then "she can see her public profile" do
+        Profile.new.when_loaded do |page|
+          # TODO: how to make this more robust
+          expect(page.text).to eq "🍐🍐 pair with me profile\nselena"
+        end
       end
     end
   end
