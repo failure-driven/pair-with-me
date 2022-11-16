@@ -70,8 +70,8 @@ CREATE TABLE public.users (
     unconfirmed_email character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    name character varying NOT NULL,
-    username character varying NOT NULL,
+    name character varying DEFAULT ''::character varying NOT NULL,
+    username character varying DEFAULT ''::character varying NOT NULL,
     provider character varying,
     uid character varying
 );
@@ -123,6 +123,13 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 
 
 --
+-- Name: index_users_on_username; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_username ON public.users USING btree (username);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -131,6 +138,7 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20221114000000'),
 ('20221115101439'),
-('20221115200514');
+('20221115200514'),
+('20221116103149');
 
 

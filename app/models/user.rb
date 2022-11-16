@@ -8,6 +8,9 @@ class User < ApplicationRecord
     :trackable,
     :omniauthable, omniauth_providers: %i[github]
 
+  validates :name, presence: true
+  validates :username, uniqueness: {}
+
   def self.from_omniauth(auth)
     user = where(arel_table[:email].eq(auth.info.email).or(
       User.arel_table[:provider].eq(auth.provider).and(User.arel_table[:uid].eq(auth.uid)),

@@ -27,21 +27,24 @@ Things you may want to cover:
 
 - [ ] add binding pry
 - [ ] turn on confirmable
-- [ ] enforce uniquness of username - or should it be nickname
 - [ ] add binding.pry
 - [ ] email template and emails
 - [ ] an admin view
-- [ ] we no longer have a flash message due to the redirects
 - [ ] make SitePrism page model always accessible without new
 - [ ] default capybara test_id to be data-testid
-- [ ] abstract the image path
+- [ ] abstract the image path, especially for testing
 - [ ] better finders for identifying pages
 - [ ] share to github
 - [ ] share to twitter
 - [ ] share to linkedIn
+- [ ] github signin in development?
+- [ ] analyse github repos for co-authored-by
 
 ## DONE
 
+- [x] enforce uniquness of username - or should it be nickname
+- [x] we no longer have a flash message due to the redirects
+  - we seem to in production (ie using Github and not just fake email signin)
 - [x] profile page
 - [x] better wait finders? like count ones for things like
 ```
