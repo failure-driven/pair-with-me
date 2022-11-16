@@ -1,9 +1,35 @@
-<div style="font-size: 100px">
-  🍐🍐
-</div>
-<h1>Pair with me</h1>
-
-<form action="/users/auth/github" method="post">
-  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-  <input type="submit" value="Sign in with GitHub">
-</form>
+  <div class="flex h-screen text-gray-900">
+    <div class="w-11/12 p-8 m-auto bg-white rounded-lg sm:w-96 bg-opacity-80 bg-clip-padding">
+      <div class="text-9xl text-center">
+        🍐🍐
+      </div>
+      <h1 class="text-2xl font-medium text-center md:text-4xl font-roboto">Pair with me</h1>
+      <div class="mt-10">
+      <% if signed_in? %>
+        <h3 class="text-2xl font-medium text-center font-roboto">
+        Thank You 💚 !!!
+        </h3>
+        <p class="font-medium text-center font-roboto mt-2">
+        for signing up for the Alpha!
+        <br />
+        we will get back to you shortly
+        <br />
+        as to what's next!
+        </p>
+      <% else %>
+        <form
+          class="text-base font-nunito"
+          action="/users/auth/github" method="post">
+          <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+          <div class="space-y-4">
+            <div class="relative flex items-center">
+              <input
+                class="w-full p-2 text-sm font-semibold text-center text-white transition duration-100 rounded-md md:text-lg font-nunito bg-gradient-to-r from-blue-600 to-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 hover:shadow-lg"
+                type="submit" value="Sign in with GitHub">
+            </div>
+          </div>
+        </form>
+      <% end %>
+      </div>
+    </div>
+  </div>

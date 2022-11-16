@@ -10,9 +10,8 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
 
-  <body>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+  <body class="bg-gradient-to-r from-green-600 to-green-400">
+    <%= render "shared/flash" %>
     <%= yield %>
   </body>
   <script>

@@ -45,7 +45,7 @@ feature "User signup", :js do
       end
 
       Then "her profile is shown" do
-        expect(page.find(".notice")).to have_content "Successfully authenticated from Github account."
+        expect(page.find("[data-testid=notice]")).to have_content "Successfully authenticated from Github account."
       end
     end
   end
