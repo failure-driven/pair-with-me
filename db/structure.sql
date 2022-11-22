@@ -40,6 +40,19 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: pairs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pairs (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    author_id uuid NOT NULL,
+    co_author_id uuid NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -86,6 +99,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
+-- Name: pairs pairs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pairs
+    ADD CONSTRAINT pairs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -99,6 +120,27 @@ ALTER TABLE ONLY public.schema_migrations
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_pairs_on_author_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pairs_on_author_id ON public.pairs USING btree (author_id);
+
+
+--
+-- Name: index_pairs_on_author_id_and_co_author_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_pairs_on_author_id_and_co_author_id ON public.pairs USING btree (author_id, co_author_id);
+
+
+--
+-- Name: index_pairs_on_co_author_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pairs_on_co_author_id ON public.pairs USING btree (co_author_id);
 
 
 --
@@ -130,6 +172,22 @@ CREATE UNIQUE INDEX index_users_on_username ON public.users USING btree (usernam
 
 
 --
+-- Name: pairs fk_rails_19770fd91b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pairs
+    ADD CONSTRAINT fk_rails_19770fd91b FOREIGN KEY (co_author_id) REFERENCES public.users(id);
+
+
+--
+-- Name: pairs fk_rails_4c5aee33b4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pairs
+    ADD CONSTRAINT fk_rails_4c5aee33b4 FOREIGN KEY (author_id) REFERENCES public.users(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -139,6 +197,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221114000000'),
 ('20221115101439'),
 ('20221115200514'),
-('20221116103149');
+('20221116103149'),
+('20221122080500');
 
 
