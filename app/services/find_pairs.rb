@@ -12,10 +12,15 @@ class FindPairs
         @nickname = nickname
       end
 
+      def self.search(term)
+        results = fetch_json(uri_for_search_term(term))
+        results["items"].map { |item| new(nickname: item["login"]) } # TODO: new from hash to save on API query
+      end
+
       def user_deets
-        @user_deets ||= fetch_json(
+        @user_deets ||= self.class.fetch_json(
           uri_for_user_deets,
-        ).slice(*%w[login id repos_url type email twitter_username])
+        ).slice(*%w[login id repos_url type email name twitter_username])
       end
 
       def all_repo_urls
@@ -25,7 +30,7 @@ class FindPairs
         page = 1
         git_urls = nil
         while git_urls.nil? || !git_urls.empty?
-          git_urls = fetch_json(uri_for_repos_page(page)).map { |repo| repo.dig("ssh_url") }
+          git_urls = self.class.fetch_json(uri_for_repos_page(page)).map { |repo| repo.dig("ssh_url") }
           @all_repo_urls += git_urls
           page += 1
         end
@@ -42,7 +47,13 @@ class FindPairs
         end
       end
 
-      def fetch_json(uri)
+      private_class_method def self.uri_for_search_term(term)
+        URI.parse("https://api.github.com/search/users").tap do |uri|
+          uri.query = "q=#{term}" # TODO: HTML encode?
+        end
+      end
+
+      private_class_method def self.fetch_json(uri)
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
         response = http.get(uri.request_uri)
@@ -104,6 +115,7 @@ class FindPairs
       if File.exist? @git_dir
         @git = Git.open(@git_dir)
         @git.pull
+        # TODO: sort out which branch to pull master is default but will need to be changed to main often
       else
         @git = Git.clone(@remote_url, @git_dir)
       end
@@ -111,19 +123,39 @@ class FindPairs
     end
   end
 
-  def process(login, debug = -> { Kernel.puts(_1) })
+  def process(login, debug: -> { Kernel.puts(_1) }, options: {})
     github_api = GitHub::Api.new(nickname: login)
 
     debug.call(github_api.user_deets) # TODO: replace with find or creae user
+
     # if type == "User" vs type == "Organization" like failure-driven
+    if github_api.user_deets["type"] == "User"
+      user = User.find_or_create_by(
+        uid: github_api.user_deets["id"],
+        provider: :github,
+        name: github_api.user_deets["name"],
+        username: github_api.user_deets["login"],
+      )
+      user.password = options["password"] if user.password.blank? && options.key?("password")
+      if user.email.blank?
+        user.email = format(
+          "%<id>s+%<login>s@users.noreply.github.com",
+          id: github_api.user_deets["id"],
+          login: github_api.user_deets["login"],
+        )
+      end
+      user.save!
+    end
 
     all_repo_urls = github_api.all_repo_urls
 
     all_repo_urls.each do |remote_url|
-      git_remote = GitRemote.new(remote_url, Rails.root)
+      git_remote = GitRemote.new(remote_url, Rails.root.join(BASE_TMP_DIR))
 
       # TODO: Create pairs
-      debug.call(git_remote.process)
+      commits = git_remote.process
+      debug.call(commits)
+      # binding.irb if commits && !commits.empty?
     end
   end
 end
