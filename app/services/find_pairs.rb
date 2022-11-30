@@ -8,17 +8,24 @@ class FindPairs
 
   module GitHub
     class Api
-      def initialize(nickname:)
+      attr_accessor :nickname
+
+      def initialize(nickname: nil, cache_dir: "tmp/fetch_cache")
         @nickname = nickname
+        @cache_dir = cache_dir
       end
 
-      def self.search(term)
+      def search(term)
         results = fetch_json(uri_for_search_term(term))
-        results["items"].map { |item| new(nickname: item["login"]) } # TODO: new from hash to save on API query
+        # TODO: results can be nil if we get throttled
+        return [] unless results["items"]
+
+        # TODO: new from hash to save on API query
+        results["items"].map { |item| GitHub::Api.new(nickname: item["login"]) }
       end
 
       def user_deets
-        @user_deets ||= self.class.fetch_json(
+        @user_deets ||= fetch_json(
           uri_for_user_deets,
         ).slice(*%w[login id repos_url type email name twitter_username])
       end
@@ -30,7 +37,7 @@ class FindPairs
         page = 1
         git_urls = nil
         while git_urls.nil? || !git_urls.empty?
-          git_urls = self.class.fetch_json(uri_for_repos_page(page)).map { |repo| repo.dig("ssh_url") }
+          git_urls = fetch_json(uri_for_repos_page(page)).map { |repo| repo.dig("ssh_url") }
           @all_repo_urls += git_urls
           page += 1
         end
@@ -47,17 +54,39 @@ class FindPairs
         end
       end
 
-      private_class_method def self.uri_for_search_term(term)
+      def uri_for_search_term(term)
         URI.parse("https://api.github.com/search/users").tap do |uri|
           uri.query = "q=#{term}" # TODO: HTML encode?
         end
       end
 
-      private_class_method def self.fetch_json(uri)
+      def fetch_json(uri)
+        uri_filename = uri
+          .to_s
+          .gsub(%r{^/}, "")
+          .tr(":", "-")
+          .tr("/", "-")
+          .tr("?", "-")
+          .tr("&", "-")
+          .tr("=", "-")
+          .tr(" ", "-")
+          .gsub(/$/, ".json")
+        cache_key = File.join(@cache_dir, uri_filename)
+
+        return JSON.parse(File.read(cache_key)) if File.exist? cache_key
+
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
         response = http.get(uri.request_uri)
-        JSON.parse(response.body)
+        json_response = JSON.parse(response.body)
+        if response.is_a?(Net::HTTPSuccess)
+          File.binwrite(cache_key, json_response.to_json)
+        end
+        json_response
+      rescue => e
+        puts "ERROR" # rubocop:disable Rails/Output
+        puts e.message # rubocop:disable Rails/Output
+        puts uri # rubocop:disable Rails/Output
       end
     end
   end
@@ -112,12 +141,12 @@ class FindPairs
     def git
       return @git if @git
 
-      if File.exist? @git_dir
-        @git = Git.open(@git_dir)
-        @git.pull
+      @git = if File.exist? @git_dir
+        Git.open(@git_dir)
+        # @git.pull # TODO: don't need to pull when running a second time
         # TODO: sort out which branch to pull master is default but will need to be changed to main often
       else
-        @git = Git.clone(@remote_url, @git_dir)
+        Git.clone(@remote_url, @git_dir)
       end
       @git
     end
@@ -155,6 +184,26 @@ class FindPairs
       # TODO: Create pairs
       commits = git_remote.process
       debug.call(commits)
+      commits.each do |commit|
+        author_email = commit.dig(:author, :email)
+        username = author_email[/([^@]+)@users.noreply.github.com/, 1]
+        # username = commit.dig(:author, :email)[/(\d+)\+([^\@]+)\@users.noreply.github.com/, 2]
+        if username
+          pp github_api.search(username).map(&:nickname) # rubocop:disable Rails/Output
+        else
+          pp github_api.search(commit.dig(:author, :name)).map(&:nickname) # rubocop:disable Rails/Output
+          pp github_api.search(commit.dig(:author, :email)).map(&:nickname) # rubocop:disable Rails/Output
+        end
+
+        co_author_email = commit.dig(:co_author, :email)
+        username = co_author_email[/([^@]+)@users.noreply.github.com/, 1]
+        if username
+          pp github_api.search(username).map(&:nickname) # rubocop:disable Rails/Output
+        else
+          pp github_api.search(commit.dig(:co_author, :name)).map(&:nickname) # rubocop:disable Rails/Output
+          pp github_api.search(commit.dig(:co_author, :email)).map(&:nickname) # rubocop:disable Rails/Output
+        end
+      end
       # binding.irb if commits && !commits.empty?
     end
   end
