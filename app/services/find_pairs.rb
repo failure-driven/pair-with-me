@@ -21,7 +21,9 @@ class FindPairs
         return [] unless results["items"]
 
         # TODO: new from hash to save on API query
-        results["items"].map { |item| GitHub::Api.new(nickname: item["login"]) }
+        results["items"]
+          .find_all { |item| item["type"] == "User" }
+          .map { |item| GitHub::Api.new(nickname: item["login"]) }
       end
 
       def user_deets
@@ -81,6 +83,7 @@ class FindPairs
         http.use_ssl = true
         response = http.get(uri.request_uri)
         json_response = JSON.parse(response.body)
+        # TODO: deal with ERROR 403: rate limit exceeded.
         if @cache_dir
           if response.is_a?(Net::HTTPSuccess)
             File.binwrite(cache_key, json_response.to_json)
@@ -161,6 +164,8 @@ class FindPairs
 
     debug.call(github_api.user_deets) # TODO: replace with find or creae user
 
+    return "user not found" if github_api.user_deets == {}
+
     # if type == "User" vs type == "Organization" like failure-driven
     if github_api.user_deets["type"] == "User"
       user = User.find_or_create_by(
@@ -192,6 +197,7 @@ class FindPairs
         author_email = commit.dig(:author, :email)
         username = author_email[/([^@]+)@users.noreply.github.com/, 1]
         # username = commit.dig(:author, :email)[/(\d+)\+([^\@]+)\@users.noreply.github.com/, 2]
+
         if username
           pp github_api.search(username).map(&:nickname) # rubocop:disable Rails/Output
         else
@@ -207,8 +213,37 @@ class FindPairs
           pp github_api.search(commit.dig(:co_author, :name)).map(&:nickname) # rubocop:disable Rails/Output
           pp github_api.search(commit.dig(:co_author, :email)).map(&:nickname) # rubocop:disable Rails/Output
         end
+
+        author = nil
+        co_author = nil
+        if github_api.user_deets["name"] == commit.dig(:author, :name)
+          author = User.find_by(
+            uid: github_api.user_deets["id"],
+            provider: :github,
+            name: github_api.user_deets["name"],
+            username: github_api.user_deets["login"],
+          )
+        end
+        if github_api.search(commit.dig(:co_author, :name)).map(&:nickname).length == 1
+          nickname = github_api.search(commit.dig(:co_author, :name)).map(&:nickname).first
+          co_author_github_api = GitHub::Api.new(nickname: nickname)
+          co_author = User.find_or_create_by(
+            uid: co_author_github_api.user_deets["id"],
+            provider: :github,
+            name: co_author_github_api.user_deets["name"],
+            username: co_author_github_api.user_deets["login"],
+          )
+          co_author.password ||= SecureRandom.hex(32)
+          if co_author.email.blank?
+            co_author.email = commit.dig(:co_author, :email)
+          end
+          co_author.save!
+        end
+
+        if author && co_author
+          Pair.find_or_create_by!(author: author, co_author: co_author)
+        end
       end
-      # binding.irb if commits && !commits.empty?
     end
   end
 end
