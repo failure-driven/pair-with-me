@@ -57,6 +57,9 @@ gem "devise", "~> 4.8"
 gem "omniauth-github", "~> 2.0"
 gem "omniauth-rails_csrf_protection", "~> 1.0"
 
+# for processing git
+gem "git", "~> 1.12"
+
 group :test do
   gem "capybara", "~> 3.38"
   gem "capybara-inline-screenshot", "~> 2.2"
@@ -70,6 +73,7 @@ end
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[mri mingw x64_mingw]
+  gem "pry", "~> 0.14.1"
 
   gem "standard", "~> 1.18", require: false
   gem "rubocop-performance", "~> 1.15", require: false
@@ -88,5 +92,3 @@ group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
 end
-
-gem "git", "~> 1.12"
