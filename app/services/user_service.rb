@@ -4,10 +4,10 @@ require "find_pairs"
 
 class UserService
   def self.find(username)
-    @user = User.find_by(username: username) || User.where("username ilike ?", username).first
+    @user = User.find_by(username: username) || User.where("username ilike ?", username)&.first
     return @user if @user
 
-    github_api = FindPairs::GitHub::Api.new(nickname: username)
+    github_api = FindPairs::GitHub::Api.new(nickname: username, cache_dir: nil)
     return nil if github_api.user_deets == {}
 
     @user = User.create!(

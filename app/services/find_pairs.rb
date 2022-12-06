@@ -61,26 +61,30 @@ class FindPairs
       end
 
       def fetch_json(uri)
-        uri_filename = uri
-          .to_s
-          .gsub(%r{^/}, "")
-          .tr(":", "-")
-          .tr("/", "-")
-          .tr("?", "-")
-          .tr("&", "-")
-          .tr("=", "-")
-          .tr(" ", "-")
-          .gsub(/$/, ".json")
-        cache_key = File.join(@cache_dir, uri_filename)
+        if @cache_dir
+          uri_filename = uri
+            .to_s
+            .gsub(%r{^/}, "")
+            .tr(":", "-")
+            .tr("/", "-")
+            .tr("?", "-")
+            .tr("&", "-")
+            .tr("=", "-")
+            .tr(" ", "-")
+            .gsub(/$/, ".json")
+          cache_key = File.join(@cache_dir, uri_filename)
 
-        return JSON.parse(File.read(cache_key)) if File.exist? cache_key
+          return JSON.parse(File.read(cache_key)) if File.exist? cache_key
+        end
 
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
         response = http.get(uri.request_uri)
         json_response = JSON.parse(response.body)
-        if response.is_a?(Net::HTTPSuccess)
-          File.binwrite(cache_key, json_response.to_json)
+        if @cache_dir
+          if response.is_a?(Net::HTTPSuccess)
+            File.binwrite(cache_key, json_response.to_json)
+          end
         end
         json_response
       rescue => e
