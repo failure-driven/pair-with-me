@@ -16,6 +16,9 @@ require "action_view/railtie"
 require "action_cable/engine"
 # require "rails/test_unit/railtie"
 
+$LOAD_PATH << File.join(__dir__, "../lib")
+require "skipping_sass_compressor"
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -42,5 +45,10 @@ module PairWithMe
     config.generators do |generator|
       generator.orm :active_record, primary_key_type: :uuid
     end
+
+    # skip SassC compressor if it fails like when using Adminsitrate with
+    # TailwindCSS
+    # https://github.com/thoughtbot/administrate/issues/2091#issuecomment-1082742540
+    config.assets.css_compressor = SkippingSassCompressor.new
   end
 end
