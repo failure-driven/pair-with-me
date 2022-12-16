@@ -2,11 +2,11 @@
 
 Rails.application.routes.draw do
   namespace :admin do
-      resources :pairs
-      resources :users
+    resources :pairs
+    resources :users
 
-      root to: "pairs#index"
-    end
+    root to: "pairs#index"
+  end
   devise_for :users, controllers: {omniauth_callbacks: "users/omniauth_callbacks"}
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
