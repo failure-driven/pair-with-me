@@ -75,6 +75,23 @@ open http://pair-with.test/
 open http://user-b.pair-with.test/
 ```
 
+seed data
+
+```bash
+bin/rails r 'FindPairs.new.process(ARGV.join())' SelenaSmall
+bin/rails r 'FindPairs.new.process(ARGV.join())' saramic
+bin/rails r 'FindPairs.new.process(ARGV.join())' failure-driven
+```
+
+set an admin user
+
+```bash
+bin/rails runner "User.find_by(username: ARGV).
+  tap{|user| user.update!(
+    user_actions: user.user_actions.merge(
+      admin: { can_administer: true }))}" SelenaSmall
+```
+
 ## TODO
 
 - [ ] add binding pry
@@ -82,12 +99,7 @@ open http://user-b.pair-with.test/
 - [ ] add binding.pry
 - [ ] email template and emails
 - [X] an admin view
-  ```bash
-  bin/rails runner "User.find_by(email: ARGV).
-    tap{|user| user.update!(
-      user_actions: user.user_actions.merge(
-        admin: { can_administer: true }))}" 278723+saramic@users.noreply.github.com
-  ```
+- [ ] redirect https://pair-with.me/admin to a login page that works
 - [ ] make SitePrism page model always accessible without new
 - [ ] default capybara test_id to be data-testid
 - [ ] abstract the image path, especially for testing
