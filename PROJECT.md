@@ -22,6 +22,7 @@
 
 ## TODO
 
+- [ ] reliable new developer onboarding experience
 - [ ] bug fix flakey test: seems not to click the **sign out** button at all so
   does not transition to the `sign in` root page
 ```bash
