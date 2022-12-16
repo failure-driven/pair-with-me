@@ -82,6 +82,7 @@ class FindPairs
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
         response = http.get(uri.request_uri)
+        sleep 0.5 # don't flood the API
         json_response = JSON.parse(response.body)
         # TODO: deal with ERROR 403: rate limit exceeded.
         if @cache_dir
@@ -237,7 +238,15 @@ class FindPairs
           if co_author.email.blank?
             co_author.email = commit.dig(:co_author, :email)
           end
-          co_author.save!
+          begin
+            co_author.save!
+          rescue => e
+            Rails.logger.debug "\033[0;31m"
+            Rails.logger.debug { "failed to save #{co_author.attributes}" }
+            Rails.logger.debug { "error: #{e.message}" }
+            Rails.logger.debug { "with: #{co_author.errors.full_messages}" }
+            Rails.logger.debug "\033[0m"
+          end
         end
 
         if author && co_author

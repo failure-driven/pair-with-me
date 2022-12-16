@@ -10,9 +10,19 @@ GREEN   = \033[0;32m
 YELLOW  = \033[0;33m
 NC      = \033[0m
 
-.PHONY: install
-install:
+.PHONY: check-tools
+check-tools:
+	bin/makefile/check-tools
+
+.PHONY: asdf-install
+asdf-install:
 	asdf install
+
+tmp/fetch_cache:
+	mkdir tmp/fetch_cache
+
+.PHONY: install
+install: asdf-install pg-init pg-start check-tools tmp/fetch_cache
 	bin/setup
 
 .PHONY: rubocop-fix
@@ -34,6 +44,14 @@ db-migrate:
 
 .PHONY: build
 build: db-migrate rubocop rspec
+
+.PHONY: check-foreman
+check-foreman: check-foreman
+	gem list -i "foreman" || gem install foreman
+
+.PHONY: start
+start: check-foreman
+	PORT=3030 foreman start --procfile=Procfile.dev
 
 .PHONY: deploy
 deploy:
@@ -62,15 +80,18 @@ usage:
 	@echo "Getting started"
 	@echo
 	@echo "${YELLOW}make${NC}              this menu"
+	@echo "${YELLOW}asdf install${NC}      asdf needs to be run outside of make"
 	@echo "${YELLOW}make install${NC}      install all the things"
-	@echo "${YELLOW}make db-migrate${NC}   run upto date migrations"
+	@echo
 	@echo "${YELLOW}make build${NC}        run the build"
+	@echo "${YELLOW}make start${NC}        start the server"
 	@echo
 	@echo "Development"
 	@echo
 	@echo "${YELLOW}make rubocop${NC}      rubocop"
 	@echo "${YELLOW}make rubocop-fix${NC}  rubocop fix"
 	@echo "${YELLOW}make rspec${NC}        run rspec tests"
+	@echo "${YELLOW}make db-migrate${NC}   run upto date migrations"
 	@echo "${YELLOW}make pg-init${NC}      one off initialize db in tmp/postgres port 5442"
 	@echo "${YELLOW}make pg-start${NC}     start the db on port 5442"
 	@echo "${YELLOW}make pg-stop${NC}      stop the db on port 5442"

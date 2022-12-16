@@ -10,3 +10,16 @@
 FindPairs.new.process("saramic", options: {"password" => "password"})
 FindPairs.new.process("SelenaSmall", options: {"password" => "password"})
 FindPairs.new.process("failure-driven")
+
+# Make Selena and Michael admins
+%w[
+  SelenaSmall
+  saramic
+].each do |username|
+  User.find_by(username: username).tap do |user|
+    user.update!(
+      user_actions: user.user_actions.merge(admin: {can_administer: true}),
+      password: "password",
+    )
+  end
+end

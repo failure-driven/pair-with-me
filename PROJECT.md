@@ -1,5 +1,15 @@
 # PROJECT
 
+This file is split into
+
+- the **Aim** of what we want to achieve
+- core **Flows** that make up the aim
+- a list of **TODO**'s
+- and a list of **Done** things
+
+## Aim
+
+**pair-with.me** is the only place that will calculate your **"Pair Programming"** reputation, allow you to share it on various forums (_like LinkedIn and your GitHub landing page_) and revist all your best past pairings or find new people to pair with and if you are lucky end up on our https://www.twitch.tv/failure_driven channel!
 ## Flows
 
 - [ ] clean registration
@@ -22,7 +32,7 @@
 
 ## TODO
 
-- [ ] reliable new developer onboarding experience
+- [ ] email template and emails
 - [ ] bug fix flakey test: seems not to click the **sign out** button at all so
   does not transition to the `sign in` root page
 ```bash
@@ -32,8 +42,7 @@ repeat 10 { bundle exec rspec ./spec/features/user_signup_spec.rb:76 }
 - [ ] add bin/rspec bin stub
 - [ ] make db-migrate
 - [ ] turn on confirmable
-- [ ] add binding.pry
-- [ ] email template and emails
+- [ ] add binding.pry and pry debugging to do `next` and `step`
 - [ ] redirect https://pair-with.me/admin to a login page that works
 - [ ] make SitePrism page model always accessible without new
 - [ ] default capybara test_id to be data-testid
@@ -47,8 +56,9 @@ repeat 10 { bundle exec rspec ./spec/features/user_signup_spec.rb:76 }
 - [ ] github actions build
 - [ ] fix first bet email not to have `}` at the end
 
-## DONE
+## Done
 
+- [X] reliable new developer onboarding experience
 - [X] an admin view
 - [x] enforce uniquness of username - or should it be nickname
 - [x] we no longer have a flash message due to the redirects
@@ -59,4 +69,3 @@ repeat 10 { bundle exec rspec ./spec/features/user_signup_spec.rb:76 }
 expect(page).to have_content "Pair with me"
 ```
   - using `have_current_page` matcher as suggested by rubocop
-
