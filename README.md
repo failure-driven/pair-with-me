@@ -7,7 +7,7 @@ bin/setup
 make
 make build
 
-gem isntall foreman
+gem install foreman
 foreman start --procfile=Procfile.dev
 ```
 
@@ -58,6 +58,19 @@ Things you may want to cover:
 
 ## Setup
 
+test and development database using port 5442 running in `tmp/` folder
+
+```bash
+# once off initialize database
+make db-init
+
+# start it, or restart after computer reboot
+make db-start
+
+# stop it
+make db-stop
+```
+
 run with puma-dev
 
 ```bash
@@ -94,7 +107,14 @@ bin/rails runner "User.find_by(username: ARGV).
 
 ## TODO
 
+- [ ] bug fix flakey test: seems not to click the **sign out** button at all so
+  does not transition to the `sign in` root page
+```bash
+repeat 10 { bundle exec rspec ./spec/features/user_signup_spec.rb:76 }
+```
 - [ ] add binding pry
+- [ ] add bin/rspec bin stub
+- [ ] make db-migrate
 - [ ] turn on confirmable
 - [ ] add binding.pry
 - [ ] email template and emails
