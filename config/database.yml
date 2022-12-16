@@ -59,6 +59,7 @@ development:
 test:
   <<: *default
   database: pair_with_me_test
+  port: 5442
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is

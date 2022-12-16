@@ -27,8 +27,13 @@ rubocop:
 rspec:
 	bundle exec rspec
 
+.PHONY: db-migrate
+db-migrate:
+	bundle exec rails db:create db:migrate
+	bundle exec rails db:drop db:create db:migrate RAILS_ENV=test
+
 .PHONY: build
-build: rubocop rspec
+build: db-migrate rubocop rspec
 
 .PHONY: deploy
 deploy:
@@ -58,6 +63,7 @@ usage:
 	@echo
 	@echo "${YELLOW}make${NC}              this menu"
 	@echo "${YELLOW}make install${NC}      install all the things"
+	@echo "${YELLOW}make db-migrate${NC}   run upto date migrations"
 	@echo "${YELLOW}make build${NC}        run the build"
 	@echo
 	@echo "Development"

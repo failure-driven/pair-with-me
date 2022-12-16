@@ -44,7 +44,7 @@ CREATE TABLE public.ar_internal_metadata (
 --
 
 CREATE TABLE public.pairs (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     author_id uuid NOT NULL,
     co_author_id uuid NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE public.schema_migrations (
 --
 
 CREATE TABLE public.users (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     email character varying DEFAULT ''::character varying NOT NULL,
     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
     reset_password_token character varying,
