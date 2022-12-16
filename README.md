@@ -56,6 +56,25 @@ Things you may want to cover:
   - [ ] email sending ability
   > users are emailed with regular updates what is new and planned for the platform
 
+## Setup
+
+run with puma-dev
+
+```bash
+# assuming puma-dev is installed
+
+# create a pair-with me file
+cat > ~/.puma-dev/pair-with
+3030
+
+# run on specified port
+PORT=3030 foreman start --procfile=Procfile.dev
+
+# visit in browser
+open http://pair-with.test/
+open http://user-b.pair-with.test/
+```
+
 ## TODO
 
 - [ ] add binding pry
