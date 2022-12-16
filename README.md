@@ -98,7 +98,6 @@ bin/rails runner "User.find_by(username: ARGV).
 - [ ] turn on confirmable
 - [ ] add binding.pry
 - [ ] email template and emails
-- [X] an admin view
 - [ ] redirect https://pair-with.me/admin to a login page that works
 - [ ] make SitePrism page model always accessible without new
 - [ ] default capybara test_id to be data-testid
@@ -110,9 +109,11 @@ bin/rails runner "User.find_by(username: ARGV).
 - [ ] github signin in development?
 - [ ] analyse github repos for co-authored-by
 - [ ] github actions build
+- [ ] fix first bet email not to have `}` at the end
 
 ## DONE
 
+- [X] an admin view
 - [x] enforce uniquness of username - or should it be nickname
 - [x] we no longer have a flash message due to the redirects
   - we seem to in production (ie using Github and not just fake email signin)
