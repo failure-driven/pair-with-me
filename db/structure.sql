@@ -86,7 +86,8 @@ CREATE TABLE public.users (
     name character varying DEFAULT ''::character varying NOT NULL,
     username character varying DEFAULT ''::character varying NOT NULL,
     provider character varying,
-    uid character varying
+    uid character varying,
+    user_actions jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -198,6 +199,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221115101439'),
 ('20221115200514'),
 ('20221116103149'),
-('20221122080500');
+('20221122080500'),
+('20221216071020');
 
 

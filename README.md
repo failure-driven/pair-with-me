@@ -62,7 +62,13 @@ Things you may want to cover:
 - [ ] turn on confirmable
 - [ ] add binding.pry
 - [ ] email template and emails
-- [ ] an admin view
+- [X] an admin view
+  ```bash
+  bin/rails runner "User.find_by(email: ARGV).
+    tap{|user| user.update!(
+      user_actions: user.user_actions.merge(
+        admin: { can_administer: true }))}" 278723+saramic@users.noreply.github.com
+  ```
 - [ ] make SitePrism page model always accessible without new
 - [ ] default capybara test_id to be data-testid
 - [ ] abstract the image path, especially for testing

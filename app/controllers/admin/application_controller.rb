@@ -8,10 +8,13 @@
 # you're free to overwrite the RESTful controller actions.
 module Admin
   class ApplicationController < Administrate::ApplicationController
+    # NOTE: probably swtich to Pundit or similar in future
+    NotAuthorized = Class.new(StandardError)
     before_action :authenticate_admin
 
     def authenticate_admin
-      # TODO Add authentication logic here.
+      authenticate_user!
+      raise NotAuthorized unless current_user.admin?
     end
 
     # Override this value to specify the number of elements to display at a time
@@ -19,5 +22,9 @@ module Admin
     # def records_per_page
     #   params[:per_page] || 20
     # end
+
+    rescue_from ApplicationController::NotAuthorized do |exception|
+      redirect_to root_path, alert: t("Not Authorized")
+    end
   end
 end

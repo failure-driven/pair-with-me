@@ -62,4 +62,8 @@ class User < ApplicationRecord
     end
     user
   end
+
+  def admin?
+    user_actions&.dig("admin", "can_administer")
+  end
 end

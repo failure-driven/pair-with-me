@@ -32,3 +32,4 @@
 en:
   hello: "Hello world"
   "user not found": "user not found"
+  "Not Authorized": "Not Authorized"
