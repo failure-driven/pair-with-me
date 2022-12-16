@@ -59,6 +59,10 @@ gem "omniauth-rails_csrf_protection", "~> 1.0"
 
 # for processing git
 gem "git", "~> 1.12"
+#
+# administration
+gem "administrate", "~> 0.18.0"
+gem "administrate-field-jsonb", "~> 0.4.6"
 
 group :test do
   gem "capybara", "~> 3.38"
