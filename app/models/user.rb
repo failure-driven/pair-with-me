@@ -37,7 +37,7 @@ class User < ApplicationRecord
   end
 
   def self.from_omniauth(auth)
-    user = where(arel_table[:email].eq(auth.info.email).or(
+    user = where(arel_table[:email].eq(auth.info.email.downcase).or(
       User.arel_table[:provider].eq(auth.provider).and(User.arel_table[:uid].eq(auth.uid)),
     )).first_or_create do |user|
       user.email = auth.info.email
