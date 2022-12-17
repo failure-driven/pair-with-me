@@ -37,7 +37,7 @@ This file is split into
   - [x] ability to send demo email
   - [ ] ability to send mail merge
   - [x] local dev email viewing
-  - [ ] better email template - https://github.com/leemunroe/responsive-html-email-template
+  - [x] better email template - https://github.com/leemunroe/responsive-html-email-template
 - [ ] **bug** fix flakey test: seems not to click the **sign out** button at all so
   does not transition to the `sign in` root page
 ```bash

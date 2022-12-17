@@ -1,3 +1,16 @@
-Hi <% @user.username %>!
+<p>
+  Hi <%= @user.username %>!
+</p>
 
-<p><%= @promotion.body %></p>
+<% @promotion.body.gsub("\r", "").split("\n\n").each do |body_part| %>
+  <p><%= body_part %></p>
+<% end %>
+
+<%= render(
+  partial: "shared/email_safe_button",
+  locals: {
+    text: t("Check out your profile"),
+    href: show_profile_url(@user.username),
+    align: "center"
+  },
+) %>
