@@ -26,13 +26,32 @@ feature "Admin sends promotions", :js do
     end
 
     scenario "Send a test promotional email" do
-      When "Admin navigatates to admin" do
+      When "Admin navigatates to admin to create a new promotion" do
         page.find("a", text: "admin").click
+        page.find(".navigation a", text: "Promotions").click
+        page.find("header a", text: "New promotion").click
       end
 
-      And "then to promotions" do
-        pending "actual promotions and associated model existing"
-        page.find(".navigation a", text: "Promotions")
+      And "creates a draft promotoin" do
+        page.find("input[name=\"promotion[title]\"]").send_keys <<~EO_TITLE.chomp
+          First ever promotion
+        EO_TITLE
+        page.find("textarea[name=\"promotion[body]\"]").send_keys <<~EO_MESSAGE
+          Hello and welcome to pair-with.me
+          some exciting updates are coming your way,
+
+          hang in there
+        EO_MESSAGE
+        page.find(".form-actions input[type=submit]").click
+      end
+
+      Then "they are told creation was successfull" do
+        expect(page.find(".flash").text).to eq "Promotion was successfully created."
+      end
+
+      When "they click on demo send" do
+        pending "implement a demo send button"
+        page.find("button", text: "Demo send")
       end
     end
   end

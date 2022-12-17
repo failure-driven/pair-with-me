@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :pairs
     resources :users
+    resources :promotions
 
     root to: "pairs#index"
   end

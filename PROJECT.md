@@ -32,39 +32,43 @@ This file is split into
 
 ## TODO
 
-- [ ] email template and emails
-- [ ] bug fix flakey test: seems not to click the **sign out** button at all so
+- [ ] **feature** generate promotional emails
+  - [x] model to store promotions
+  - [ ] ability to send demo email
+  - [ ] ability to send mail merge
+  - [ ] local dev email viewing
+  - [ ] better email template - https://github.com/leemunroe/responsive-html-email-template
+- [ ] **bug** fix flakey test: seems not to click the **sign out** button at all so
   does not transition to the `sign in` root page
 ```bash
 repeat 10 { bundle exec rspec ./spec/features/user_signup_spec.rb:76 }
 ```
-- [ ] add binding pry
-- [ ] make db-migrate
-- [ ] turn on confirmable
-- [ ] add binding.pry and pry debugging to do `next` and `step`
-- [ ] redirect https://pair-with.me/admin to a login page that works
-- [ ] make SitePrism page model always accessible without new
-- [ ] default capybara test_id to be data-testid
-- [ ] abstract the image path, especially for testing
-- [ ] better finders for identifying pages
-- [ ] share to github
-- [ ] share to twitter
-- [ ] share to linkedIn
-- [ ] github signin in development?
-- [ ] analyse github repos for co-authored-by
-- [ ] github actions build
-- [ ] fix first bet email not to have `}` at the end
+- [ ] **feature** turn on confirmable
+- [ ] **tools** add binding.pry and pry debugging to do `next` and `step`
+- [ ] **bug** redirect https://pair-with.me/admin to a login page that works
+- [ ] **tools** make SitePrism page model always accessible without new
+- [ ] **tools** default capybara test_id to be data-testid
+- [ ] **bug** abstract the image path, especially for testing
+- [ ] **bug** better finders for identifying pages
+- [ ] **feature** share to github
+- [ ] **feature** share to twitter
+- [ ] **feature** share to linkedIn
+- [ ] **tools** github signin in development?
+- [ ] **feature** analyse github repos for co-authored-by
+- [ ] **tools** github actions build
+- [ ] **bug** fix first bet email not to have `}` at the end
 
 ## Done
 
-- [x] add bin/rspec binstub with `bundle binstubs rspec-core`
-- [X] reliable new developer onboarding experience
-- [X] an admin view
-- [x] enforce uniquness of username - or should it be nickname
-- [x] we no longer have a flash message due to the redirects
+- [x] **tools** make db-migrate
+- [x] **tools** add bin/rspec binstub with `bundle binstubs rspec-core`
+- [X] **docs** reliable new developer onboarding experience
+- [X] **feature** an admin view
+- [x] **bug** enforce uniquness of username - or should it be nickname
+- [x] **bug** we no longer have a flash message due to the redirects
   - we seem to in production (ie using Github and not just fake email signin)
-- [x] profile page
-- [x] better wait finders? like count ones for things like
+- [x] **feature** profile page
+- [x] **bug** better wait finders? like count ones for things like
 ```
 expect(page).to have_content "Pair with me"
 ```

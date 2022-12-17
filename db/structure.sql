@@ -53,6 +53,20 @@ CREATE TABLE public.pairs (
 
 
 --
+-- Name: promotions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.promotions (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    title character varying NOT NULL,
+    body text NOT NULL,
+    status integer DEFAULT 0,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -105,6 +119,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.pairs
     ADD CONSTRAINT pairs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: promotions promotions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.promotions
+    ADD CONSTRAINT promotions_pkey PRIMARY KEY (id);
 
 
 --
@@ -200,6 +222,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221115200514'),
 ('20221116103149'),
 ('20221122080500'),
-('20221216071020');
+('20221216071020'),
+('20221217025155');
 
 
