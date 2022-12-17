@@ -39,7 +39,6 @@ This file is split into
 repeat 10 { bundle exec rspec ./spec/features/user_signup_spec.rb:76 }
 ```
 - [ ] add binding pry
-- [ ] add bin/rspec bin stub
 - [ ] make db-migrate
 - [ ] turn on confirmable
 - [ ] add binding.pry and pry debugging to do `next` and `step`
@@ -58,6 +57,7 @@ repeat 10 { bundle exec rspec ./spec/features/user_signup_spec.rb:76 }
 
 ## Done
 
+- [x] add bin/rspec binstub with `bundle binstubs rspec-core`
 - [X] reliable new developer onboarding experience
 - [X] an admin view
 - [x] enforce uniquness of username - or should it be nickname
