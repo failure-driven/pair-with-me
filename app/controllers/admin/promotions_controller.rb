@@ -47,8 +47,7 @@ module Admin
 
     def demo_send
       PromotionDemoSender.call(Promotion.find(params[:promotion_id]))
-      # TODO: can below be action: :show
-      redirect_to admin_promotion_path(id: params[:promotion_id]), notice: t("Demo email sent")
+      redirect_to({action: :show, id: params[:promotion_id]}, notice: t("Demo email sent"))
     end
   end
 end
