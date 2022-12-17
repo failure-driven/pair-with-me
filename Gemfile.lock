@@ -94,6 +94,9 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
+    capybara-email (3.0.2)
+      capybara (>= 2.4, < 4.0)
+      mail
     capybara-inline-screenshot (2.2.1)
       capybara-screenshot
     capybara-screenshot (1.0.26)
@@ -375,6 +378,7 @@ DEPENDENCIES
   administrate-field-jsonb (~> 0.4.6)
   bootsnap
   capybara (~> 3.38)
+  capybara-email (~> 3.0)
   capybara-inline-screenshot (~> 2.2)
   cssbundling-rails
   debug

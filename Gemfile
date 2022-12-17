@@ -66,6 +66,7 @@ gem "administrate-field-jsonb", "~> 0.4.6"
 
 group :test do
   gem "capybara", "~> 3.38"
+  gem "capybara-email", "~> 3.0"
   gem "capybara-inline-screenshot", "~> 2.2"
   gem "rspec-example_steps", "~> 3.1"
   gem "rspec-rails", "~> 6.0"

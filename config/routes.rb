@@ -4,7 +4,9 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :pairs
     resources :users
-    resources :promotions
+    resources :promotions do
+      post :demo_send
+    end
 
     root to: "pairs#index"
   end

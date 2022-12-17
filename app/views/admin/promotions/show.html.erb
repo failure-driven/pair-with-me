@@ -56,8 +56,10 @@ as well as a link to its edit page.
   </dl>
   <%= link_to(
     t("Demo send"),
-    "#",
+    # [:demo_send, namespace, page.resource],
+    admin_promotion_demo_send_path(promotion_id: page.resource.id),
     class: "button",
+    method: :post,
     data: {testid: "demo-send"}
   ) %>
 </section>
