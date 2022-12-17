@@ -34,9 +34,9 @@ This file is split into
 
 - [ ] **feature** generate promotional emails
   - [x] model to store promotions
-  - [ ] ability to send demo email
+  - [x] ability to send demo email
   - [ ] ability to send mail merge
-  - [ ] local dev email viewing
+  - [x] local dev email viewing
   - [ ] better email template - https://github.com/leemunroe/responsive-html-email-template
 - [ ] **bug** fix flakey test: seems not to click the **sign out** button at all so
   does not transition to the `sign in` root page
