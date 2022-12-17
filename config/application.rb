@@ -50,5 +50,10 @@ module PairWithMe
     # TailwindCSS
     # https://github.com/thoughtbot/administrate/issues/2091#issuecomment-1082742540
     config.assets.css_compressor = SkippingSassCompressor.new
+
+    # configure custom mailer for devise
+    config.to_prepare do
+      Devise::Mailer.layout "mailer"
+    end
   end
 end
