@@ -50,8 +50,14 @@ feature "Admin sends promotions", :js do
       end
 
       When "they click on demo send" do
-        pending "implement a demo send button"
-        page.find("button", text: "Demo send")
+        page.find("[data-testid=demo-send]").click
+      end
+
+      Then "they see a demo email sent to all admins" do
+        pending "actually recieving an email"
+        open_email "selenasmall@example.com"
+        expect(current_email.subject).to eq "[TEST] First ever promotion"
+        expect(current_email.from).to eq(["failure.driven.blog+test@example.com"])
       end
     end
   end
