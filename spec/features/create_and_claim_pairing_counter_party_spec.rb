@@ -14,8 +14,9 @@ feature "Create and claim pairing counter party", :js do
           nickname: "saramic",
         },
       )
-      visit root_path
-      page.find("[type=submit][value=\"Sign in with GitHub\"]").click
+      Pages::App.new.load do |page|
+        page.signin_with_github.click
+      end
     end
 
     scenario "Manual process creates pairing counter parites which are later claimed" do # rubocop:disable RSpec/NoExpectationExample
@@ -47,24 +48,24 @@ feature "Create and claim pairing counter party", :js do
       end
 
       When "Michael's profile is viewed" do
-        Profile.new.load(username: "saramic")
+        Pages::Profile.new.load(username: "saramic")
       end
 
       Then "Selena can be seen as an un-verified pair" do
-        Profile.new.when_loaded do |page|
+        Pages::Profile.new.when_loaded do |page|
           expect(page.profile_name).to have_content "saramic"
           expect(page.pairs.map(&:username).map(&:text)).to contain_exactly("SelenaSmall", "j-tws")
         end
       end
 
       When "her profile is viewed" do
-        Profile.new.when_loaded do |page|
+        Pages::Profile.new.when_loaded do |page|
           page.visit_pair("SelenaSmall")
         end
       end
 
       Then "it is un-claimed" do
-        Profile.new.when_loaded do |page|
+        Pages::Profile.new.when_loaded do |page|
           expect(page.profile_name).to have_content "SelenaSmall"
           expect(page.status).to have_content "un-claimed"
         end
@@ -79,13 +80,13 @@ feature "Create and claim pairing counter party", :js do
             nickname: "SelenaSmall",
           },
         )
-        Profile.new.when_loaded do |page|
+        Pages::Profile.new.when_loaded do |page|
           page.claim.click
         end
       end
 
       Then "she successfully claims her account" do
-        Profile.new.when_loaded do |page|
+        Pages::Profile.new.when_loaded do |page|
           expect(page.profile_name).to have_content "SelenaSmall"
           expect(page.status).to have_content "claimed"
         end

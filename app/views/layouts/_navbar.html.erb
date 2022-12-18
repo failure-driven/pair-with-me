@@ -1,3 +1,9 @@
 <% if current_user&.admin? %>
-  <%= link_to "admin", "/admin" %>
+  <%= link_to(
+    "admin",
+    "/admin",
+    data: {
+      testid: "admin-link",
+    },
+  ) %>
 <% end %>

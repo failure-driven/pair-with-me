@@ -3,7 +3,7 @@
 require "rails_helper"
 
 feature "User signup", :js do
-  let(:app) { App.new }
+  let(:app) { Pages::UserRegistration.new }
 
   scenario "User signs up successfully" do
     When "Selena signs up with a valid username" do
@@ -18,7 +18,12 @@ feature "User signup", :js do
     end
 
     Then "an error is returned as the name cannot be nil" do
-      expect(page.find_by_id("error_explanation")).to have_content "1 error prohibited this user from being saved:\nName can't be blank"
+      app.when_loaded do |page|
+        expect(page.error_explanation).to have_content <<~EO_ERROR.chomp
+          1 error prohibited this user from being saved:
+          Name can't be blank
+        EO_ERROR
+      end
     end
 
     # TODO: expand test to allow signup? or edit and confirmation?
@@ -39,12 +44,13 @@ feature "User signup", :js do
 
     scenario "User signs up with GitHub successfully" do
       When "Selena signs up with a valid username" do
-        visit root_path
-        page.find("[type=submit][value=\"Sign in with GitHub\"]").click
+        Pages::App.new.load do |page|
+          page.signin_with_github.click
+        end
       end
 
       Then "her profile is shown" do
-        Profile.new.when_loaded do |page|
+        Pages::Profile.new.when_loaded do |page|
           expect(page.profile_name).to have_content "SelenaSmall"
           expect(page).to have_current_path "/SelenaSmall"
           @profile_url = page.current_path
@@ -52,7 +58,7 @@ feature "User signup", :js do
       end
 
       When "she signs out" do
-        Profile.new.when_loaded do |page|
+        Pages::Profile.new.when_loaded do |page|
           page.sign_out.click
         end
       end
@@ -66,7 +72,7 @@ feature "User signup", :js do
       end
 
       Then "she can see her public profile" do
-        Profile.new.when_loaded do |page|
+        Pages::Profile.new.when_loaded do |page|
           # TODO: how to make this more robust
           expect(page.text).to eq "🍐🍐 pair with me profile\nSelenaSmall"
         end
@@ -75,12 +81,13 @@ feature "User signup", :js do
 
     scenario "User with same username attempts to sign up" do
       When "Selena signs up with a valid username" do
-        visit root_path
-        page.find("[type=submit][value=\"Sign in with GitHub\"]").click
+        Pages::App.new.load do |page|
+          page.signin_with_github.click
+        end
       end
 
       Then "her profile name is SelenaSmall" do
-        Profile.new.when_loaded do |page|
+        Pages::Profile.new.when_loaded do |page|
           expect(page.profile_name).to have_content "SelenaSmall"
           page.sign_out.click
         end
@@ -98,12 +105,15 @@ feature "User signup", :js do
       end
 
       And "they attempt to sign up" do
-        visit root_path
-        page.find("[type=submit][value=\"Sign in with GitHub\"]").click
+        Pages::App.new.load do |page|
+          page.signin_with_github.click
+        end
       end
 
       Then "they get an error that the username is already taken" do
-        expect(page.find("[data-testid=alert]")).to have_content "Username has already been taken"
+        Pages::App.new.load do |page|
+          expect(page.alert).to have_content "Username has already been taken"
+        end
       end
     end
   end

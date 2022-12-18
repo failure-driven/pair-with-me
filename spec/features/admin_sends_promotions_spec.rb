@@ -21,40 +21,55 @@ feature "Admin sends promotions", :js do
           nickname: "SelenaSmall",
         },
       )
-      visit root_path
-      page.find("[type=submit][value=\"Sign in with GitHub\"]").click
+      Pages::App.new.load do |page|
+        page.signin_with_github.click
+      end
     end
 
     scenario "Send a test promotional email" do
       When "Admin navigatates to admin to create a new promotion" do
-        page.find("a", text: "admin").click
-        page.find(".navigation a", text: "Promotions").click
-        page.find("header a", text: "New promotion").click
+        Pages::App.new.when_loaded do |page|
+          page.admin.click
+        end
+        Pages::Admin.new.when_loaded do |page|
+          page.navigate_to("Promotions")
+          page.new_promotion.click
+        end
       end
 
-      And "creates a draft promotoin" do
-        page.find("input[name=\"promotion[title]\"]").send_keys <<~EO_TITLE.chomp
-          First ever promotion
-        EO_TITLE
-        page.find("textarea[name=\"promotion[body]\"]").send_keys <<~EO_MESSAGE
-          Hello and welcome to pair-with.me
-          some exciting updates are coming your way,
+      And "creates a draft promotion" do
+        Pages::Admin.new.when_loaded do |page|
+          body = <<~EO_MESSAGE
+            Hello and welcome to pair-with.me
+            some exciting updates are coming your way,
 
-          hang in there
-        EO_MESSAGE
-        page.find(".form-actions input[type=submit]").click
+            hang in there
+          EO_MESSAGE
+          page.submit!(
+            :promotion,
+            title: "First ever promotion",
+            body: body,
+          )
+        end
       end
 
       Then "they are told creation was successfull" do
-        expect(page.find(".flash").text).to eq "Promotion was successfully created."
+        Pages::Admin.new.when_loaded do |page|
+          expect(page.flash.text).to eq "Promotion was successfully created."
+        end
       end
 
       When "they click on demo send" do
-        page.find("[data-testid=demo-send]").click
+        Pages::Admin.new.when_loaded do |page|
+          page.demo_send.click
+          find("[data-testid=demo-send]").click
+        end
       end
 
       Then "they are informed the demo email sent successfully" do
-        expect(page.find(".flash").text).to eq "Demo email sent"
+        Pages::Admin.new.when_loaded do |page|
+          expect(page.flash.text).to eq "Demo email sent"
+        end
       end
 
       Then "they see a demo email sent to all admins" do

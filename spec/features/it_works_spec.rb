@@ -3,7 +3,7 @@
 require "rails_helper"
 
 describe "It works root rails demo page", :js do
-  let(:it_works_root) { ItWorksRoot.new }
+  let(:it_works_root) { Pages::ItWorksRoot.new }
 
   it "I have rails" do
     When "user visits the app" do

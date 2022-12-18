@@ -21,11 +21,11 @@ feature "Create a user on the fly if they exist in Github", :js do
     end
 
     When "someone visits /saramic" do
-      Profile.new.load(username: "saramic")
+      Pages::Profile.new.load(username: "saramic")
     end
 
     Then "Saramic's profile is fetched and displayed" do
-      Profile.new.when_loaded do |page|
+      Pages::Profile.new.when_loaded do |page|
         expect(page.profile_name).to have_content "saramic"
       end
     end
@@ -45,11 +45,11 @@ feature "Create a user on the fly if they exist in Github", :js do
 
     scenario "Redirect to correct name for a user" do
       When "someone visits /selenasmall" do
-        Profile.new.load(username: "selenasmall")
+        Pages::Profile.new.load(username: "selenasmall")
       end
 
       Then "Saramic's profile is fetched and displayed" do
-        Profile.new.when_loaded do |page|
+        Pages::Profile.new.when_loaded do |page|
           expect(page).to have_current_path "/SelenaSmall"
           expect(page.profile_name).to have_content "SelenaSmall"
         end
@@ -59,14 +59,14 @@ feature "Create a user on the fly if they exist in Github", :js do
 
   scenario "When the user cannot be found in GitHub" do
     When "someone visits /not-a-user" do
-      Profile.new.load(username: "not-a-user")
+      Pages::Profile.new.load(username: "not-a-user")
     end
 
     Then "the user is redirect to the root page with an notice saying user cannot be found" do
       expect(page).to have_current_path root_path, ignore_query: true
-      expect(
-        page.find("[data-testid=notice]"),
-      ).to have_text "user not found"
+      Pages::App.new.when_loaded do |page|
+        expect(page.notice).to have_text "user not found"
+      end
     end
   end
 end
