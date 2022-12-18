@@ -23,7 +23,7 @@ class FindPairs
         # TODO: new from hash to save on API query
         results["items"]
           .find_all { |item| item["type"] == "User" }
-          .map { |item| GitHub::Api.new(nickname: item["login"]) }
+          .map { |item| GitHub::Api.new(nickname: item["login"], cache_dir: @cache_dir) }
       end
 
       def user_deets
@@ -161,7 +161,9 @@ class FindPairs
   end
 
   def process(login, debug: -> { Kernel.puts(_1) }, options: {})
-    github_api = GitHub::Api.new(nickname: login)
+    base_tmp_dir = options[:base_tmp_dir] || BASE_TMP_DIR
+    fetch_cache_dir = options[:fetch_cache_dir] || "tmp/fetch_cache"
+    github_api = GitHub::Api.new(nickname: login, cache_dir: fetch_cache_dir)
 
     debug.call(github_api.user_deets) # TODO: replace with find or creae user
 
@@ -189,7 +191,7 @@ class FindPairs
     all_repo_urls = github_api.all_repo_urls
 
     all_repo_urls.each do |remote_url|
-      git_remote = GitRemote.new(remote_url, Rails.root.join(BASE_TMP_DIR))
+      git_remote = GitRemote.new(remote_url, Rails.root.join(base_tmp_dir))
 
       # TODO: Create pairs
       commits = git_remote.process
@@ -227,7 +229,7 @@ class FindPairs
         end
         if github_api.search(commit.dig(:co_author, :name)).map(&:nickname).length == 1
           nickname = github_api.search(commit.dig(:co_author, :name)).map(&:nickname).first
-          co_author_github_api = GitHub::Api.new(nickname: nickname)
+          co_author_github_api = GitHub::Api.new(nickname: nickname, cache_dir: fetch_cache_dir)
           co_author = User.find_or_create_by(
             uid: co_author_github_api.user_deets["id"],
             provider: :github,
