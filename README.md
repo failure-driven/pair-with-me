@@ -123,6 +123,18 @@ open http://pair-with.test/
 open http://user-saramic.pair-with.test/
 ```
 
+## Redis not running
+
+Redis is required to run sidekiq for background jobs
+
+```bash
+brew install redis
+brew services list # should be running
+
+# alternatively start manually
+redis-server --daemonize yes
+```
+
 ### Seed data
 
 seed data, should have been run as part of `make install` in the `bin/setup` step but in a nutshell

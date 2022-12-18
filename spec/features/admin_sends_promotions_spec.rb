@@ -72,6 +72,10 @@ feature "Admin sends promotions", :js do
         end
       end
 
+      When "all jobs run" do
+        Sidekiq::Worker.drain_all
+      end
+
       Then "they see a demo email sent to all admins" do
         open_email "selenasmall@example.com"
         expect(current_email.subject).to eq "[TEST] First ever promotion"

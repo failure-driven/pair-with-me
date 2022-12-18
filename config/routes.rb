@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "sidekiq/web"
+
 Rails.application.routes.draw do
   namespace :admin do
     resources :pairs
@@ -10,8 +12,12 @@ Rails.application.routes.draw do
 
     root to: "pairs#index"
   end
+
+  authenticate :user, ->(user) { user.admin? } do
+    mount Sidekiq::Web => "/admin/sidekiq"
+  end
+
   devise_for :users, controllers: {omniauth_callbacks: "users/omniauth_callbacks"}
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # a test only route used by spec/features/it_works_spec.rb
   get "test_root", to: "rails/welcome#index", as: "test_root_rails"

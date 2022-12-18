@@ -74,6 +74,13 @@ else
   echo -e "✅ ${GREEN}found expected version of postgre server running ${expected_postgres_version}${NC}"
 fi
 
+echo -e "checking that redis is up and running: redis-cli ping"
+redis_response=$(redis-cli ping || echo "connection refused")
+echo ${redis_response}
+if [[ "${redis_response}" != PONG ]]; then
+  echo -e "🟡  ${YELLOW}redis seems not to be running - please start ${NC}"
+fi
+
 if ${NOT_OK}
 then
   echo -e "\n❌  ${RED}some of your tools are out of date.${NC}"

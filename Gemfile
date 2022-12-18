@@ -67,6 +67,9 @@ gem "administrate-field-jsonb", "~> 0.4.6"
 # Email inline styling
 gem "premailer-rails", "~> 1.12"
 
+# background jobs
+gem "sidekiq", "~> 7.0"
+
 group :test do
   gem "capybara", "~> 3.38"
   gem "capybara-email", "~> 3.0"

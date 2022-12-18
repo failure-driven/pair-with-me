@@ -55,5 +55,8 @@ module PairWithMe
     config.to_prepare do
       Devise::Mailer.layout "mailer"
     end
+
+    # use sidekiq for active jobs
+    config.active_job.queue_adapter = :sidekiq
   end
 end
