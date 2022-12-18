@@ -29,7 +29,10 @@ class FindPairs
       def user_deets
         @user_deets ||= fetch_json(
           uri_for_user_deets,
-        ).slice(*%w[login id repos_url type email name twitter_username])
+        ).tap do |user_json|
+          return {} unless user_json
+          user_json.slice(*%w[login id repos_url type email name twitter_username])
+        end
       end
 
       def all_repo_urls
@@ -85,6 +88,9 @@ class FindPairs
         sleep 0.5 # don't flood the API
         json_response = JSON.parse(response.body)
         # TODO: deal with ERROR 403: rate limit exceeded.
+        if response.is_a?(Net::HTTPSuccess)
+          sleep 0.5
+        end
         if @cache_dir
           if response.is_a?(Net::HTTPSuccess)
             File.binwrite(cache_key, json_response.to_json)
@@ -227,8 +233,53 @@ class FindPairs
             username: github_api.user_deets["login"],
           )
         end
-        if github_api.search(commit.dig(:co_author, :name)).map(&:nickname).length == 1
+        # NOTE: not tested
+        author_email_left = commit.dig(:author, :email).sub(/@.*$/, "")
+        if !author &&
+            github_api.search(commit.dig(:author, :name)).map(&:nickname).grep(/#{author_email_left}/).length == 1
+          nickname = github_api.search(commit.dig(:author, :name)).map(&:nickname)
+            .grep(author_email_left).first
+          author = User.find_by(username: nickname)
+        end
+        if !author &&
+            github_api.search(commit.dig(:author, :name)).map(&:nickname).length == 1
+          nickname = github_api.search(commit.dig(:author, :name)).map(&:nickname).first
+          author = User.find_by(username: nickname)
+        end
+        email_left = commit.dig(:co_author, :email).sub(/@.*$/, "")
+        if github_api.search(commit.dig(:co_author, :name)).map(&:nickname).length == 1 ||
+            github_api.search(commit.dig(:co_author, :name)).map(&:nickname).grep(/#{email_left}/).length == 1
+
           nickname = github_api.search(commit.dig(:co_author, :name)).map(&:nickname).first
+          # NOTE: not tested
+          # email_left@example.com found in [email_left, other]
+          nickname ||= github_api.search(commit.dig(:co_author, :name)).map(&:nickname)
+            .grep(email_left).first
+          co_author_github_api = GitHub::Api.new(nickname: nickname, cache_dir: fetch_cache_dir)
+          break if co_author_github_api.user_deets == {}
+          co_author = User.find_or_create_by(
+            uid: co_author_github_api.user_deets["id"],
+            provider: :github,
+            name: co_author_github_api.user_deets["name"] || "username: #{co_author_github_api.user_deets["login"]}",
+            username: co_author_github_api.user_deets["login"],
+          )
+          co_author.password ||= SecureRandom.hex(32)
+          if co_author.email.blank?
+            co_author.email = commit.dig(:co_author, :email)
+          end
+          co_author.save!
+        end
+
+        # if !co_author
+        #   puts "enter a github username:"
+        #   username = $stdin.readline
+        #   puts username
+        #   exit
+        # end
+
+        # NOTE: untested below
+        if !co_author && github_api.search(commit.dig(:co_author, :email)).map(&:nickname).length == 1
+          nickname = github_api.search(commit.dig(:co_author, :email)).map(&:nickname).first
           co_author_github_api = GitHub::Api.new(nickname: nickname, cache_dir: fetch_cache_dir)
           co_author = User.find_or_create_by(
             uid: co_author_github_api.user_deets["id"],
@@ -250,6 +301,7 @@ class FindPairs
             Rails.logger.debug "\033[0m"
           end
         end
+        # binding.pry unless author
 
         if author && co_author
           Pair.find_or_create_by!(author: author, co_author: co_author)

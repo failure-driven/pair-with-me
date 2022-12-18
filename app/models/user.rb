@@ -29,7 +29,7 @@ class User < ApplicationRecord
       .includes(:author, :co_author)
       .map do |pair|
         (pair.author_id == id) ? pair.co_author : pair.author
-      end
+      end.uniq
   end
 
   def status
