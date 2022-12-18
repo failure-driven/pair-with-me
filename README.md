@@ -16,10 +16,6 @@ run tests
 
 ```bash
 make build
-
-# Note there is a flakey on
-Capybara::ElementNotFound:
-  Unable to find css "[type=submit][value=\"Sign in with GitHub\"]"
 ```
 
 run the dev server - _it's easiset with `foreman` as you need to run the css comilation for TailwindCSS_

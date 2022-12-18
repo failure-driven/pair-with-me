@@ -89,7 +89,13 @@ feature "User signup", :js do
       Then "her profile name is SelenaSmall" do
         Pages::Profile.new.when_loaded do |page|
           expect(page.profile_name).to have_content "SelenaSmall"
+        end
+      end
+
+      When "she signs out" do
+        Pages::Profile.new.when_loaded do |page|
           page.sign_out.click
+          expect(page).to have_content "Pair with me"
         end
       end
 
@@ -111,7 +117,7 @@ feature "User signup", :js do
       end
 
       Then "they get an error that the username is already taken" do
-        Pages::App.new.load do |page|
+        Pages::App.new.when_loaded do |page|
           expect(page.alert).to have_content "Username has already been taken"
         end
       end

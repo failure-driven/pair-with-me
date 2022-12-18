@@ -38,11 +38,6 @@ This file is split into
   - [ ] ability to send mail merge
   - [x] local dev email viewing
   - [x] better email template - https://github.com/leemunroe/responsive-html-email-template
-- [ ] **bug** fix flakey test: seems not to click the **sign out** button at all so
-  does not transition to the `sign in` root page
-```bash
-repeat 10 { bundle exec rspec ./spec/features/user_signup_spec.rb:76 }
-```
 - [ ] **feature** turn on confirmable
 - [ ] **tools** add binding.pry and pry debugging to do `next` and `step`
 - [ ] **bug** redirect https://pair-with.me/admin to a login page that works
@@ -60,6 +55,11 @@ repeat 10 { bundle exec rspec ./spec/features/user_signup_spec.rb:76 }
 
 ## Done
 
+- [x] **bug** fix flakey test: seems not to click the **sign out** button at all so
+  does not transition to the `sign in` root page
+```bash
+repeat 10 { bundle exec rspec ./spec/features/user_signup_spec.rb:76 }
+```
 - [x] **tools** make db-migrate
 - [x] **tools** add bin/rspec binstub with `bundle binstubs rspec-core`
 - [X] **docs** reliable new developer onboarding experience
