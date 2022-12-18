@@ -38,6 +38,10 @@ This file is split into
   - [ ] ability to send mail merge
   - [x] local dev email viewing
   - [x] better email template - https://github.com/leemunroe/responsive-html-email-template
+- [ ] **tools** get background jobs running
+  - [x] sidekiq running on heroku
+  - [ ] do we still need the config/initializers/sidekiq.rb or is the redis.rb one enough?
+  - [ ] signup for SendGrid to actually get the emails out
 - [ ] **feature** turn on confirmable
 - [ ] **tools** add binding.pry and pry debugging to do `next` and `step`
 - [ ] **bug** redirect https://pair-with.me/admin to a login page that works
