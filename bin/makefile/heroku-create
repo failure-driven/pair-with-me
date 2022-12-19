@@ -25,9 +25,9 @@ heroku buildpacks:add --index 2 heroku/ruby
 #echo "Adding heroku-postgres addon (unless it already exists)"
 #(heroku addons | grep heroku-postgresql) || heroku addons:create heroku-postgresql:"$DB_SCALE"
 
-echo "Adding heroku-redis addon (unless it already exists)"
+# echo "Adding heroku-redis addon (unless it already exists)"
 # changing redis scale will NOT automatically scale heroku - this requires clickops
-(heroku addons | grep upstash-redis) || heroku addons:create upstash-redis:free
+# (heroku addons | grep upstash-redis) || heroku addons:create upstash-redis:free
 
 # Note that we are just automating the addition of the heroku scheduler addon.
 # It is currently _not_ possible to automate the actual scheduling of jobs so we need to do that
