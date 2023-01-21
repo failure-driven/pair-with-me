@@ -5,12 +5,21 @@
       "https://avatars.githubusercontent.com/u/#{@user.uid}?v=4",
       class: "rounded-full"
     ) %>
-    <span class="text-5xl text-center">
-      🍐🍐
+    <div class="inline-block w-24" style="position: relative;">
+    <span
+      class="text-5xl pull-left"
+      style="display: Inline-block; transform: scale(-1, 1);">
+      🍐
     </span>
+    <span
+      class="text-5xl pull-right"
+      style="position: absolute; left: 44px;">
+      🍐
+    </span>
+    </div>
     <span class="text-2xl">pair with me profile</span>
     <h2 class="text-3xl font-medium text-center font-roboto mb-4" data-testid="profile-name"><%= @user.username %></h2>
-    <% if signed_in? %>
+    <% if signed_in? && current_user == @user %>
     <h3 class="text-2xl font-medium text-center font-roboto">
     Thank You 💚 !!!
     </h3>

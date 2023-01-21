@@ -74,7 +74,7 @@ feature "User signup", :js do
       Then "she can see her public profile" do
         Pages::Profile.new.when_loaded do |page|
           # TODO: how to make this more robust
-          expect(page.text).to eq "🍐🍐 pair with me profile\nSelenaSmall"
+          expect(page.text.delete("\n")).to eq "🍐🍐pair with me profileSelenaSmall"
         end
       end
     end
