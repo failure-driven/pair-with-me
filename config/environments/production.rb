@@ -76,7 +76,7 @@ Rails.application.configure do
     host: "pair-with.me",
     protocol: "https",
   }
-  config.default_from_email = "failure.driven.blog@gmail.com"
+  config.default_from_email = "info@pair-with.me"
 
   # Setup the mailer config
   # TODO: likely config below

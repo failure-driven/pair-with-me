@@ -50,7 +50,7 @@ Rails.application.configure do
     port: 3001,
     protocol: "http",
   }
-  config.default_from_email = "failure.driven.blog+test@example.com"
+  config.default_from_email = "info-pair-with-me+test@example.com"
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr

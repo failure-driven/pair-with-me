@@ -79,7 +79,7 @@ feature "Admin sends promotions", :js do
       Then "they see a demo email sent to all admins" do
         open_email "selenasmall@example.com"
         expect(current_email.subject).to eq "[TEST] First ever promotion"
-        expect(current_email.from).to eq(["failure.driven.blog+test@example.com"])
+        expect(current_email.from).to eq(["info-pair-with-me+test@example.com"])
         expect(current_email.body).to have_content("Hello and welcome to pair-with.me")
       end
     end
