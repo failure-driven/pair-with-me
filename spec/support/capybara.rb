@@ -4,6 +4,12 @@ require "capybara/rspec"
 require "capybara/rails"
 require "capybara-inline-screenshot/rspec"
 
+# as per https://github.com/teamcapybara/capybara/issues/2666
+# to get around
+# ruby 3.2 related
+#   ArgumentError: wrong number of arguments (given 2, expected 0..1)
+Selenium::WebDriver.logger.output = false
+
 Capybara.javascript_driver = :selenium_chrome
 
 Capybara.register_driver :selenium_chrome do |app|
